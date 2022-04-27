@@ -5,16 +5,18 @@ const Article = require('../models/article');
 const router = express.Router();
 
 router.get('/new', (req, res) => {
-    res.render('new-article', { article: new Article() });
+    res.render('new-article.ejs', { article: new Article() });
+});
+
+router.get('/edit/:id', async (req, res) => {
+    res.render('edit-article.ejs', { article: await Article.findById(req.params.id) });
 });
 
 router.get('/:id', async (req, res) => {
     // query the article from the db
     const article = await Article.findById(req.params.id);
 
-    res.send(article);
-
-    // res.render('articles/show', { article: article });
+    res.render('article.ejs', { article: article });
 });
 
 router.post('/', async (req, res) => {
@@ -35,7 +37,7 @@ router.post('/', async (req, res) => {
         res.redirect(`/articles/${article.id}`);
     } catch (e) {
         console.log(e);
-        res.render('articles/new', { article: article });
+        res.send(`Unexpected Error: ${e}`);
     }
 });
 
