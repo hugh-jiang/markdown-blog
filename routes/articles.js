@@ -12,9 +12,9 @@ router.get('/edit/:id', async (req, res) => {
     res.render('edit-article.ejs', { article: await Article.findById(req.params.id) });
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:slug', async (req, res) => {
     // query the article from the db
-    const article = await Article.findById(req.params.id);
+    const article = await Article.findOne({ slug: req.params.slug });
 
     res.render('article.ejs', { article: article });
 });
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
         // Save our article into the database and save the response in `article`
         // Note: save() is an async function, so we need to make our callback function async and await the save() function to terminate
         article = await article.save();
-        res.redirect(`/articles/${article.id}`);
+        res.redirect(`/articles/${article.slug}`);
     } catch (e) {
         console.log(e);
         res.send(`Unexpected Error: ${e}`);
