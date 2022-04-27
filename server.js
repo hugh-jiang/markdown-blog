@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const Article = require('./models/article');
 const articleRouter = require('./routes/articles');
 const app = express();
 
@@ -18,25 +19,8 @@ app.use(express.json())
 // All requests to /articles/{...} will be served through the articleRouter route
 app.use('/articles', articleRouter);
 
-app.get('/', (req, res) => {
-    const articles = [{
-        title: 'Test Article',
-        author: 'Hugh Jiang',
-        date: new Date(),
-        description: 'Test description'
-    },
-    {
-        title: 'Test Article',
-        author: 'Hugh Jiang',
-        date: new Date(),
-        description: 'Test description'
-    },
-    {
-        title: 'Test Article',
-        author: 'Hugh Jiang',
-        date: new Date(),
-        description: 'Test description'
-    }];
+app.get('/', async (req, res) => {
+    const articles = await Article.find().sort({ date: 'descending' });
 
     res.render('index', {articles: articles});
 });
