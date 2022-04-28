@@ -36,7 +36,8 @@
                     </div>
                     <a href="/articles/<%= article.slug %>" class="btn btn-secondary mt-2">Read More</a>
 
-                    <form action="/articles/<%= article.id %>?_method=DELETE" method="POST" class="d-inline">
+                    <form action="/articles/<%= article.id %>?_method=DELETE" method="POST"
+                        onSubmit="return confirm('Are you sure you want to delete: <%= article.title %>?');" class="d-inline">
                         <button type="submit" class="btn btn-danger mt-2">Delete</button>
                     </form>
 
