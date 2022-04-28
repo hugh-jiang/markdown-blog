@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 const Article = require('./models/article');
 const articleRouter = require('./routes/articles');
 const app = express();
@@ -14,7 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // middleware for post requests where the request body is JSON format (not used in this app, but included anyway)
 // both these middleware functions add content into the `req.body` argument in the post request callback function
-app.use(express.json())
+app.use(express.json());
+
+app.use(methodOverride('_method'));
+
 
 // All requests to /articles/{...} will be served through the articleRouter route
 app.use('/articles', articleRouter);
