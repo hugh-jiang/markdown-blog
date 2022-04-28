@@ -19,6 +19,29 @@ router.get('/:slug', async (req, res) => {
     res.render('article.ejs', { article: article });
 });
 
+router.put('/:id', async (req, res) => {
+    try {
+        let article = await Article.findById(req.params.id);
+        
+        if (!article) {
+            res.statusCode(404).send(`article id ${req.params.id} not found`);
+            return;
+        }
+        
+        article.title = req.body.title;
+        article.author = "Hugh Jiang";
+        article.description = req.body.description;
+        article.markdown = req.body.markdown;
+
+        article = await article.save();
+        res.redirect(`/articles/${article.slug}`);
+
+    } catch (e) {
+        console.log(e);
+        res.status(400).send(`Unexpected Error: ${e}`);
+    }
+});
+
 router.delete('/:id', async (req, res) => {
     try {
         await Article.findByIdAndDelete(req.params.id);
