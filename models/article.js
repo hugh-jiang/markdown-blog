@@ -51,7 +51,7 @@ const schema = new mongoose.Schema({
 // Function that sets the slug before mongoose runs validation for the schema
 // We need to explicitly declare the function instead of using => (not sure why)
 schema.pre('validate', function(next) {
-    console.log('here');
+    // console.log('here');
 
     if (this.title) {
         this.slug = slugify(this.title, { lower: true, strict: true });
