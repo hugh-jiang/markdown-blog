@@ -2,6 +2,13 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
+// Modules for sanitizing markdown and processing it
+const marked = require('marked'); // processing markdown -> html
+const createDomPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const dompurifier = createDomPurify(new JSDOM().window);
+
+
 // Define schema for an article object in the database
 const schema = new mongoose.Schema({
     title: {
@@ -19,6 +26,12 @@ const schema = new mongoose.Schema({
         default: () => Date.now() // return the default date as the current date
     },
 
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
+
     description: {
        type: String
     },
@@ -28,10 +41,9 @@ const schema = new mongoose.Schema({
         required: true
     },
 
-    slug: {
+    sanitizedHtml: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     }
 });
 
@@ -43,6 +55,11 @@ schema.pre('validate', function(next) {
 
     if (this.title) {
         this.slug = slugify(this.title, { lower: true, strict: true });
+    }
+
+    if (this.markdown) {
+        const html = marked.parse(this.markdown); // convert markdown to html
+        this.sanitizedHtml = dompurifier.sanitize(html); // sanitize html and add to db
     }
     
     next();

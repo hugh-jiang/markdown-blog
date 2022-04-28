@@ -19,7 +19,7 @@
 <body>
 
     <%- include('./partials/navbar.ejs') %>
-    
+
     <div class="container" style="padding-top: 50px; padding-bottom: 50px">
         <h1 class="mb-4"><%= article.title %></h1>
         
@@ -30,7 +30,7 @@
     <hr>
 
     <div>
-        <%= article.markdown %>
+        <%- article.sanitizedHtml %>
     </div>
 
     </div>
